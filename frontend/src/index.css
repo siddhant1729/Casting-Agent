@@ -115,7 +115,6 @@ body {
   font-weight: 600;
 }
 .nav-item.active .icon { color: var(--brand-700); }
-.nav-item.live:hover { background: var(--line-soft); }
 
 /* Inert items mark where the feature sits in the product. They are not links:
    dimmed, unfocusable, no hover, and announced as disabled. */

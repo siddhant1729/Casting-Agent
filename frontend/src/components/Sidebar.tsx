@@ -1,5 +1,4 @@
 import type { ReactElement } from "react";
-import { NavLink } from "react-router-dom";
 
 // The product's own sidebar, with Casting sitting directly below Actors —
 // which is the argument the prototype is making about where this belongs.
@@ -69,17 +68,16 @@ export function Sidebar() {
         ))}
 
         {/* Actors is the surface this replaces; Casting sits immediately under
-            it. Actors stays inert — the comparison lives inside /compare. */}
+            it, and is the only live item in here. */}
         <Inert item={{ label: "Actors", icon: icon("M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4.5 20a7.5 7.5 0 0 1 15 0") }} />
 
-        <NavLink
-          to="/"
-          end
-          className={({ isActive }) => `nav-item live${isActive ? " active" : ""}`}
-        >
+        {/* The app is one page, so this is not a link and there is no route to
+            match against: Casting is always the current surface. `aria-current`
+            says so without promising navigation that would go nowhere. */}
+        <div className="nav-item active" aria-current="page">
           {icon("M4 6.5h11v11H4zM17 9.5l3-2v9l-3-2z")}
           <span>Casting</span>
-        </NavLink>
+        </div>
 
         <div className="nav-label nav-tools">Tools</div>
         <div className="nav-tools">
