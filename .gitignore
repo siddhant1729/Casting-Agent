@@ -1,7 +1,10 @@
 # Local secrets — .env.example is the committed reference and must stay tracked.
-.env
-.env.local
-.env.*.local
+#
+# Every .env variant, not just the three that existed before deployment. Vite
+# reads .env.production during `npm run build`, and a Render build that picks up
+# a committed one silently overrides the dashboard's VITE_API. The negation has
+# to come last: git applies the final matching pattern.
+.env*
 !.env.example
 
 # Python
@@ -10,6 +13,10 @@ venv/
 __pycache__/
 *.py[cod]
 *.egg-info/
+# `pip install -e .` builds through hatchling; on Render that happens in the
+# container, but running the same command locally leaves these behind.
+build/
+.eggs/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -18,10 +25,15 @@ htmlcov/
 
 # Node
 node_modules/
+# Covers frontend/dist. It is a build artefact everywhere — Render builds it
+# during deploy, and the API serves it only if it happens to be present.
 dist/
 dist-ssr/
 *.local
 .vite/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
 # Logs and scratch
 *.log
@@ -38,3 +50,6 @@ Thumbs.db
 # design/ is intentionally tracked — the Stitch export is the visual reference
 # the frontend was built against, and a checkout without it cannot be reviewed
 # against the design.
+
+# render.yaml is intentionally tracked — it is the deployment, and a checkout
+# without it cannot be redeployed from the blueprint.

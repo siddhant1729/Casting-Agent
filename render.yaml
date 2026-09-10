@@ -1,0 +1,50 @@
+# Render blueprint. Two services: the API, and the built frontend as a static
+# site. Import it with New > Blueprint and point Render at this repo.
+#
+# The one manual step is GEMINI_API_KEY — it is marked sync:false so the key is
+# typed into the dashboard rather than committed here. Without it the app still
+# deploys and runs; ranking falls back to word overlap and /api/health says so.
+
+services:
+  - type: web
+    name: casting-agent-api
+    runtime: python
+    plan: free
+    # `pip install -e .` puts the `casting` package on the path, which is what
+    # `casting.api:app` resolves against. requirements.txt is the HTTP surface.
+    buildCommand: pip install -r requirements.txt && pip install -e .
+    # Render injects $PORT and routes to it; binding 127.0.0.1 makes the service
+    # unreachable from outside the container, so 0.0.0.0 is required.
+    startCommand: uvicorn casting.api:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.7"
+      - key: GEMINI_API_KEY
+        sync: false
+      # The static site's own URL, so the browser's cross-origin request from
+      # it is allowed. *.onrender.com is already covered by the regex in
+      # api.py; this is here for a custom domain.
+      - key: ALLOWED_ORIGINS
+        sync: false
+
+  - type: web
+    name: casting-agent-web
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      # Baked into the bundle at build time — Vite substitutes it during
+      # `npm run build`, so changing it requires a redeploy of this service.
+      - key: VITE_API
+        fromService:
+          name: casting-agent-api
+          type: web
+          property: host
+    routes:
+      # Client-side router: every path has to return index.html or a reload of
+      # /compare is a 404 from the CDN.
+      - type: rewrite
+        source: /*
+        destination: /index.html

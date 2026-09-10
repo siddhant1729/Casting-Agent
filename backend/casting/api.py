@@ -6,19 +6,31 @@ in `casting/`, and this file only maps requests onto it.
 
 from __future__ import annotations
 
+import os
+from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
+from . import env
 from .domain.catalog import build_roster, search_by_name
 from .domain.models import Kind, Query, Setting
 from .pipeline import DEFAULT_LIMIT, DEFAULT_SEED, EXAMPLE_QUERIES, run
 from .reasoning.llm import get_client
 from .serialize import actor_json, results_json
 
+# On Render nothing sources a shell profile before uvicorn starts, and the
+# dashboard's environment variables are already in os.environ by then. Loading
+# here is a no-op in that case (the real environment always wins) and is what
+# makes a local `uvicorn casting.api:app` see .env without run.sh.
+env.load()
+
 app = FastAPI(title="Casting Agent", version="0.2.0")
+
 # Any localhost port, not just 5173.
 #
 # Vite silently falls back to 5174 when 5173 is taken — by a stray dev server,
@@ -26,9 +38,25 @@ app = FastAPI(title="Casting Agent", version="0.2.0")
 # block, which surfaces in the UI as "backend unreachable" while the API is in
 # fact running and healthy. The port a dev server happens to land on is not a
 # security boundary; the loopback interface is.
+#
+# In a deployment the browser origin is not loopback at all, so ALLOWED_ORIGINS
+# (comma-separated) carries the frontend's URL. Render static sites and web
+# services both land on *.onrender.com, which the regex covers so a preview
+# deploy with a generated hostname is not a CORS mystery.
+LOCAL_ORIGIN_REGEX = r"http://(localhost|127\.0\.0\.1):\d+"
+RENDER_ORIGIN_REGEX = r"https://[a-z0-9-]+\.onrender\.com"
+
+
+def allowed_origins() -> list[str]:
+    """Explicit extra origins from the environment, blanks and slashes trimmed."""
+    raw = os.environ.get("ALLOWED_ORIGINS", "")
+    return [origin.strip().rstrip("/") for origin in raw.split(",") if origin.strip()]
+
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origin_regex=r"http://(localhost|127\.0\.0\.1):\d+",
+    allow_origins=allowed_origins(),
+    allow_origin_regex=f"{LOCAL_ORIGIN_REGEX}|{RENDER_ORIGIN_REGEX}",
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -113,3 +141,46 @@ def health() -> dict[str, Any]:
         "model_available": client.available,
         "last_error": client.last_error,
     }
+
+
+# --- Optional single-service mode -------------------------------------------
+#
+# Two shapes deploy from this file. Two Render services (a static site for the
+# frontend, this as the API) is the default and needs nothing below. One service
+# that serves both is cheaper and has no cross-origin surface at all; it happens
+# whenever a built `frontend/dist` is present, so the same image works either
+# way and an unbuilt checkout stays a pure API rather than 404-ing on itself.
+
+def find_frontend_dist() -> Path | None:
+    """`frontend/dist` relative to the repo root, if it has been built."""
+    override = os.environ.get("FRONTEND_DIST")
+    candidates = [Path(override)] if override else [
+        parent / "frontend" / "dist" for parent in Path(__file__).resolve().parents[:4]
+    ]
+    return next((c for c in candidates if (c / "index.html").is_file()), None)
+
+
+FRONTEND_DIST = find_frontend_dist()
+
+if FRONTEND_DIST is not None:
+    # Hashed build assets. Mounted before the catch-all so a missing asset is a
+    # 404 rather than index.html served with a JavaScript content type.
+    app.mount(
+        "/assets",
+        StaticFiles(directory=FRONTEND_DIST / "assets"),
+        name="assets",
+    )
+
+    @app.get("/{path:path}")
+    def spa(path: str) -> FileResponse:
+        """Serve the built file when it exists, else index.html.
+
+        The router is client-side, so /compare is a real URL to the user and a
+        nonexistent file to the server. Returning index.html is what makes a
+        reload or a shared link land on the page instead of a 404. The /api
+        routes are declared above and match first.
+        """
+        candidate = (FRONTEND_DIST / path).resolve()
+        if path and FRONTEND_DIST in candidate.parents and candidate.is_file():
+            return FileResponse(candidate)
+        return FileResponse(FRONTEND_DIST / "index.html")

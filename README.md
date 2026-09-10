@@ -135,6 +135,47 @@ below. The UI says which scorer produced what you are looking at, in the masthea
 
 ---
 
+## Deploying to Render
+
+`render.yaml` is a blueprint: **New > Blueprint** in the Render dashboard,
+point it at this repo, and it creates two services.
+
+| Service | What it is | URL |
+| --- | --- | --- |
+| `casting-agent-api` | Python web service, `uvicorn casting.api:app` | `…-api.onrender.com` |
+| `casting-agent-web` | Static site, the Vite build | `…-web.onrender.com` — open this one |
+
+Set `GEMINI_API_KEY` on the API service in the dashboard. It is marked
+`sync: false` so the key is never committed. Without it the deploy still
+succeeds and ranking falls back to word overlap, which `/api/health` reports.
+
+Three things in `api.py` exist for this and nothing else:
+
+* **`ALLOWED_ORIGINS`** — the browser now calls the API cross-origin, so the
+  frontend's URL has to be allowed. `*.onrender.com` is matched by default, so
+  this is only needed for a custom domain.
+* **`$PORT` and `--host 0.0.0.0`** — Render assigns the port and routes to it.
+  Binding loopback makes the service unreachable and the health check fail.
+* **`env.load()` at import** — the dashboard's variables are already in the
+  environment and win over any `.env`, so this is a no-op there. It is what
+  lets a bare `uvicorn casting.api:app` see `.env` locally.
+
+Free instances sleep after inactivity; the first request after that takes
+roughly thirty seconds while the container starts.
+
+### One service instead of two
+
+If `frontend/dist` exists, the API serves the UI from its own origin and there
+is no cross-origin surface at all. Build the frontend during the API's build
+step and drop the static site:
+
+    buildCommand: pip install -r requirements.txt && pip install -e . && cd frontend && npm ci && npm run build
+
+Client-side routes are handled — `/compare` returns `index.html` rather than a
+404, on both layouts.
+
+---
+
 ## The vocabulary gap
 
 This is the idea the whole thing rests on, and the reason the tests are shaped the way

@@ -1,6 +1,12 @@
 import type { ActorSearchResults, Meta, Results } from "./types";
 
-const BASE = import.meta.env.VITE_API ?? "http://127.0.0.1:8000";
+// Render's blueprint fills VITE_API from the API service's `host` property,
+// which is a bare hostname — no scheme. Adding https:// here keeps the
+// deployment config declarative instead of asking someone to paste the full
+// URL by hand, and an explicit http:// or https:// is left untouched.
+const RAW_BASE = import.meta.env.VITE_API ?? "http://127.0.0.1:8000";
+const BASE = (/^https?:\/\//.test(RAW_BASE) ? RAW_BASE : `https://${RAW_BASE}`)
+  .replace(/\/$/, "");
 
 export async function fetchMeta(): Promise<Meta> {
   const response = await fetch(`${BASE}/api/meta`);
