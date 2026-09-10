@@ -8,6 +8,10 @@ It ranks and explains. It never picks.
 
 Replaces browsing a grid of faces with a name search. Built against [`docs/PRD.md`](docs/PRD.md).
 
+**New here?** [`docs/walkthrough.md`](docs/walkthrough.md) is the ten-minute
+guided tour — what to type, what to look for, and how to break it on purpose.
+This file is the reference underneath it.
+
 ---
 
 ## Running it
@@ -64,7 +68,7 @@ The UI reads its API base from `VITE_API`, so a backend elsewhere is
 ### Tests
 
 ```bash
-.venv/bin/python -m pytest -q                                      # all 136
+.venv/bin/python -m pytest -q                                      # all 138
 .venv/bin/python -m pytest backend/tests/reasoning -q              # scoring and explanation
 .venv/bin/python -m pytest backend/tests/test_architecture.py -q   # the layer boundary
 ```
@@ -88,7 +92,9 @@ reference for what goes in it; `.env` itself is gitignored.
 |---|---|
 | `GEMINI_API_KEY` | Enables semantic ranking. Blank or absent falls back to word overlap. Get one at [aistudio.google.com/apikey](https://aistudio.google.com/apikey). |
 | `GEMINI_MODEL` | Optional. Defaults to `gemini-3.5-flash-lite` — read the note below before changing it. |
-| `VITE_API` | Frontend only, passed on the command line rather than via `.env`. Defaults to `http://127.0.0.1:8000`. |
+| `VITE_API` | Frontend only, and read at build time — passed on the command line locally, set by `render.yaml` on a deploy. Defaults to `http://127.0.0.1:8000`. |
+| `ALLOWED_ORIGINS` | Deployment only. Comma-separated origins allowed to call the API. Localhost and `*.onrender.com` are already allowed. |
+| `FRONTEND_DIST` | Deployment only. Overrides where the API looks for a built frontend to serve itself. |
 
 Loading is `casting/env.py`, about forty lines of standard library rather than
 `python-dotenv` — reading `KEY=value` does not justify a dependency, and the requirements
@@ -256,6 +262,8 @@ description ─▶ search ─▶ explain ─▶ ranked looks
 ```
 README.md                     this file
 docs/PRD.md                   the spec this was built against
+docs/walkthrough.md           the guided tour of the running app
+render.yaml                   Render blueprint — API service + static frontend
 .env.example                  committed reference; copy to .env
 run.sh                        sets up and starts both servers
 requirements.txt              API runtime deps (the pipeline needs none)
@@ -275,7 +283,7 @@ backend/casting/
   serialize.py                record -> JSON
   api.py                      FastAPI surface
 
-backend/tests/                136 tests, mirroring the layers
+backend/tests/                138 tests, mirroring the layers
   test_architecture.py        enforces the boundary above
 scripts/demo.py               the seeded searches in a terminal
 

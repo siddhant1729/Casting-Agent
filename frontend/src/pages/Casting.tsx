@@ -42,9 +42,9 @@ export function Casting({ meta }: { meta: Meta }) {
       <section className="region" aria-labelledby="region-brief">
         <div className="region-head">
           <span className="region-title" id="region-brief">
-            Region 1 · Campaign brief
+            Describe who you need
           </span>
-          <span className="pill">Describe who you need, in your own words</span>
+          <span className="pill">In your own words</span>
         </div>
 
         <label className="sr-only" htmlFor="brief">Campaign brief</label>
@@ -77,7 +77,7 @@ export function Casting({ meta }: { meta: Meta }) {
 
         <div style={{ marginTop: 18, display: "flex", gap: 12, alignItems: "center" }}>
           <button className="btn" disabled={busy} onClick={() => run(query)}>
-            {busy ? "Ranking…" : "Rank actor-looks"}
+            {busy ? "Ranking…" : "Find matches"}
           </button>
           {busy && <span className="spinner-note">scoring every look against your brief…</span>}
         </div>
@@ -89,12 +89,9 @@ export function Casting({ meta }: { meta: Meta }) {
         <section className="region" aria-labelledby="region-ranked">
           <div className="region-head">
             <span className="region-title" id="region-ranked">
-              Region 3 · Ranked actor-looks
-              <span className="region-note">
-                {" "}(Ranked unit is an actor-look, not an actor. No pricing or booking locks.)
-              </span>
+              Matches
             </span>
-            <span className="region-note">Semantic affinity score</span>
+            <span className="region-note">Match</span>
           </div>
 
           {results.items.length === 0 ? (
@@ -106,6 +103,10 @@ export function Casting({ meta }: { meta: Meta }) {
               ))}
             </div>
           )}
+
+          <p className="region-note" style={{ marginTop: 14 }}>
+            Placeholder art — no generated faces.
+          </p>
 
           <Notices results={results} scorerNote={meta.scorer_notice} />
         </section>
@@ -133,7 +134,7 @@ function ZeroState({ results }: { results: Results }) {
           <span className="why">
             {results.model_used
               ? "Ranking ran on the model path. Broaden the description — naming a setting or a language gives it more to match on."
-              : "Ranking fell back to word overlap, which only matches literal words. A GEMINI_API_KEY enables semantic matching and will return results for this brief."}
+              : "Ranking fell back to matching literal words only. A GEMINI_API_KEY lets it match on meaning, which will return results for this brief."}
           </span>
         </>
       )}

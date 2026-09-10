@@ -55,8 +55,8 @@ export default function App() {
                 Cast with <em>precision</em> for your campaign.
               </h1>
               <p>
-                Semantic matching across distinct actor-looks, delivery profiles and
-                staging environments — moving beyond blunt keyword search.
+                Describe the person you want. Get the performers and looks that fit,
+                matched on how they come across rather than on keywords.
               </p>
             </div>
 
@@ -65,8 +65,7 @@ export default function App() {
                 Brief &amp; ranked looks
               </NavLink>
               <NavLink to="/compare" className={({ isActive }) => `tab${isActive ? " active" : ""}`}>
-                Live comparison: keyword vs semantic
-                <span className="badge">CORE DEMO</span>
+                Compare with search
               </NavLink>
             </nav>
           </div>

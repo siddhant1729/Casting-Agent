@@ -48,7 +48,7 @@ export function Compare({ meta }: { meta: Meta }) {
     <>
       <section className="region">
         <div className="region-head">
-          <span className="region-title">Live comparison · keyword vs semantic</span>
+          <span className="region-title">Compare with search</span>
           <span className="region-note">
             One query. The roster's name search on the left, this agent on the right.
           </span>
@@ -128,7 +128,7 @@ export function Compare({ meta }: { meta: Meta }) {
               <span className="why">
                 {ranked.model_used
                   ? "Model path. Broaden the description."
-                  : "Offline word-overlap fallback — set GEMINI_API_KEY for semantic matching."}
+                  : "Matching literal words only — set GEMINI_API_KEY to match on meaning."}
               </span>
             </div>
           ) : (

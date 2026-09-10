@@ -15,13 +15,13 @@ export function Notices({ results, scorerNote }: { results: Results; scorerNote:
         </span>
         <span className={`notice${offline ? " warn" : ""}`}>
           <b>ranking</b>{" "}
-          {offline ? "word overlap · offline fallback" : "semantic · model"}
+          {offline ? "literal words · offline fallback" : "on meaning · model"}
         </span>
         <span className="notice">
           <b>roster</b> {results.look_count} looks · {results.roster_size} actors
         </span>
         <span className="notice">
-          <b>portraits</b> abstract, no likeness
+          <b>portraits</b> placeholder art
         </span>
       </div>
       {offline && <p className="muted" style={{ marginTop: 10 }}>{scorerNote}</p>}
