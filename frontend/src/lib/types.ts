@@ -71,6 +71,9 @@ export interface Results {
 export interface Meta {
   examples: { label: string; text: string }[];
   default_seed: number;
+  /** The default seed's roster, so a search in flight can say what it is reading. */
+  roster_size: number;
+  look_count: number;
   model_available: boolean;
   catalog_notice: string;
   scorer_notice: string;

@@ -31,3 +31,25 @@ export async function search(
   if (!response.ok) throw new Error(`search failed: ${response.status}`);
   return response.json();
 }
+
+// `fetch` rejects with a bare TypeError when the request never reached the
+// server at all — the API asleep, down, or unreachable. "TypeError: Failed to
+// fetch" is the browser's words for that, and it tells the person reading it
+// nothing they can act on. Everything else is an HTTP status the API did send.
+//
+// Not `instanceof TypeError`: that is false across realms (an iframe, a test
+// harness), and each engine words the same failure differently — Chrome "Failed
+// to fetch", Firefox "NetworkError when attempting to fetch resource", Safari
+// "Load failed". Matching the name and those wordings covers all three, and the
+// worst case of a miss is the fallback message below rather than a wrong claim.
+const NETWORK_FAILURE = /failed to fetch|networkerror|network request failed|load failed/i;
+
+export function describeFailure(error: unknown): string {
+  const detail = error instanceof Error ? error.message : String(error);
+  const name = error instanceof Error ? error.name : "";
+  if (name === "TypeError" || NETWORK_FAILURE.test(detail)) {
+    return "Can't reach the API. It may be asleep — free instances shut down " +
+      "after a while and take up to a minute to start.";
+  }
+  return `The search didn't finish (${detail}).`;
+}

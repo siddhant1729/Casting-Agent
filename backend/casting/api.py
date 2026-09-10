@@ -79,9 +79,16 @@ class SearchRequest(BaseModel):
 @app.get("/api/meta")
 def meta() -> dict[str, Any]:
     """What the UI needs to render honestly."""
+    # The roster the default seed builds, so the screen can say how much work a
+    # search is doing while it is doing it. A search takes eight to eleven
+    # seconds, and "reading 138 look profiles" is the difference between a wait
+    # and a hang. Same seed the UI searches with, so the number is the real one.
+    roster = build_roster(DEFAULT_SEED)
     return {
         "examples": list(EXAMPLE_QUERIES),
         "default_seed": DEFAULT_SEED,
+        "roster_size": len(roster),
+        "look_count": sum(len(actor.looks) for actor in roster),
         "model_available": get_client().available,
         "catalog_notice": (
             "Synthetic catalog. Actors and looks are generated from the seed shown. "

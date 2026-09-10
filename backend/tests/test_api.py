@@ -250,3 +250,13 @@ def test_a_name_lookup_names_no_scorer():
     body = client.post("/api/search", json={"query": "Rohan"}).json()
     assert body["scorer"] == "none"
     assert body["model_used"] is False
+
+
+def test_meta_carries_the_roster_counts():
+    """A search takes eight to eleven seconds, and the screen says what it is
+    reading while it runs. That number has to be available before any search
+    returns, and it has to be the real one for the seed the UI searches with."""
+    meta = client.get("/api/meta").json()
+    ranked = client.post("/api/search", json={"query": DESCRIPTION_QUERY}).json()
+    assert meta["look_count"] == ranked["look_count"]
+    assert meta["roster_size"] == ranked["roster_size"] == 45
