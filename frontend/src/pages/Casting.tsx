@@ -1,16 +1,28 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { LookCard } from "../components/LookCard";
 import { Notices } from "../components/Notices";
+import { Portrait } from "../components/Portrait";
 import { search } from "../lib/api";
 import type { Meta, Results } from "../lib/types";
 
-// Region 1 (the brief) and Region 3 (ranked actor-looks) from the design.
+// One box, both searches.
 //
-// Region 2 ("what we understood" — editable attribute chips) and the tonal-risk
-// slider are not built. They need a brief parser, a typed spec with unset
-// fields, and a re-rank parameter, none of which exist in the API this is
-// wired to. Rendering chips that cannot round-trip, or a slider that changes
-// nothing, would be a picture of a feature rather than the feature.
+// A name off the roster and a description of a person arrive through the same
+// input, and the server decides which search answers — the response carries a
+// `route` saying which ran. Nothing here inspects the query to guess: a second
+// copy of that decision in TypeScript is a second thing to keep true, and it
+// would drift the first time the rule changed.
+//
+// The brief's editable attribute chips and tonal-risk slider are not built.
+// They need a brief parser, a typed spec with unset fields, and a re-rank
+// parameter, none of which exist in the API this is wired to.
+
+// What produced what is on screen, in the plainest words available.
+const PATH_NOTE: Record<string, string> = {
+  name: "Matched on name.",
+  description: "Ranked on your description.",
+  both: "Ranked on your description.",
+};
 
 export function Casting({ meta }: { meta: Meta }) {
   const [query, setQuery] = useState(meta.examples[0]?.text ?? "");
@@ -37,17 +49,21 @@ export function Casting({ meta }: { meta: Meta }) {
     if (meta.examples[0]) run(meta.examples[0].text);
   }, [meta, run]);
 
+  const named = results?.actors ?? [];
+  const ranked = results?.items ?? [];
+  const nothing = results && named.length === 0 && ranked.length === 0;
+
   return (
     <>
       <section className="region" aria-labelledby="region-brief">
         <div className="region-head">
           <span className="region-title" id="region-brief">
-            Describe who you need
+            Who are you looking for?
           </span>
           <span className="pill">In your own words</span>
         </div>
 
-        <label className="sr-only" htmlFor="brief">Campaign brief</label>
+        <label className="sr-only" htmlFor="brief">Who are you looking for?</label>
         <textarea
           id="brief"
           className="brief"
@@ -58,6 +74,7 @@ export function Casting({ meta }: { meta: Meta }) {
           }}
           placeholder="e.g. someone warm and credible who can explain a money app without talking down to anyone"
         />
+        <p className="input-note">Names or descriptions — either works.</p>
 
         <div className="presets">
           <span className="presets-label">Quick brief presets:</span>
@@ -77,64 +94,98 @@ export function Casting({ meta }: { meta: Meta }) {
 
         <div style={{ marginTop: 18, display: "flex", gap: 12, alignItems: "center" }}>
           <button className="btn" disabled={busy} onClick={() => run(query)}>
-            {busy ? "Ranking…" : "Find matches"}
+            {busy ? "Searching…" : "Find matches"}
           </button>
-          {busy && <span className="spinner-note">scoring every look against your brief…</span>}
+          {busy && <span className="spinner-note">searching the roster…</span>}
         </div>
       </section>
 
       {error && <p className="error" role="alert">{error}</p>}
 
       {results && (
-        <section className="region" aria-labelledby="region-ranked">
+        <section className="region" aria-labelledby="region-results">
           <div className="region-head">
-            <span className="region-title" id="region-ranked">
-              Matches
+            <span className="region-title" id="region-results">
+              {named.length > 0 && ranked.length === 0 ? "Performers" : "Matches"}
             </span>
-            <span className="region-note">Match</span>
+            <span className="region-note">{PATH_NOTE[results.route] ?? ""}</span>
           </div>
 
-          {results.items.length === 0 ? (
+          {nothing ? (
             <ZeroState results={results} />
           ) : (
-            <div className="looks">
-              {results.items.map((item) => (
-                <LookCard key={`${item.actor.id}-${item.look.id}`} item={item} />
-              ))}
-            </div>
+            <>
+              {named.length > 0 && (
+                <>
+                  <p className="path-note">
+                    {named.length} {named.length === 1 ? "performer" : "performers"} on
+                    the roster {named.length === 1 ? "is" : "are"} named “{results.query.text}”.
+                  </p>
+                  <div className="grid-actors">
+                    {named.map((actor) => (
+                      <div className="grid-actor" key={actor.id}>
+                        <Portrait seed={actor.portrait_seed} size={96} />
+                        <div className="name">{actor.name}</div>
+                        <div className="meta">{actor.look_count} looks · {actor.kind}</div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              )}
+
+              {/* Both halves answered. The divider says the list below is a
+                  different question being answered, not more of the same one. */}
+              {named.length > 0 && ranked.length > 0 && (
+                <div className="divider">
+                  <span>and looks that fit the rest of what you typed</span>
+                </div>
+              )}
+
+              {ranked.length > 0 && (
+                <div className="looks">
+                  {ranked.map((item) => (
+                    <LookCard key={`${item.actor.id}-${item.look.id}`} item={item} />
+                  ))}
+                </div>
+              )}
+            </>
           )}
 
           <p className="region-note" style={{ marginTop: 14 }}>
             Placeholder art — no generated faces.
           </p>
 
-          <Notices results={results} scorerNote={meta.scorer_notice} />
+          {/* The ranking chips describe a scorer. A name lookup never ran one,
+              so on that path there is nothing honest for them to report. */}
+          {results.route !== "name" && (
+            <Notices results={results} scorerNote={meta.scorer_notice} />
+          )}
         </section>
       )}
     </>
   );
 }
 
-// Never a blank panel. Without a constraint layer there is no filter to name,
-// so this states what was actually searched and what would change the outcome,
-// rather than implying a filter that does not exist.
+// Never a blank panel. It says what was actually searched, and points at the
+// other kind of query — the box takes both, and a miss is usually a person
+// reaching for the one they did not type.
 function ZeroState({ results }: { results: Results }) {
   const blank = !results.query.text.trim();
   return (
     <div className="empty-state">
       <strong>
-        {blank ? "Describe who you are looking for" : "0 looks match this brief"}
+        {blank ? "Type a name or describe who you need" : "Nothing matched"}
       </strong>
       {blank ? (
-        "The roster is searched on your description — an empty brief has nothing to rank against."
+        "An empty box has nothing to search on."
       ) : (
         <>
-          All {results.look_count} looks across {results.roster_size} actors were scored;
-          none scored above zero.
+          No performer is named “{results.query.text}”, and all {results.look_count} looks
+          across {results.roster_size} actors were scored without one rising above zero.
           <span className="why">
             {results.model_used
-              ? "Ranking ran on the model path. Broaden the description — naming a setting or a language gives it more to match on."
-              : "Ranking fell back to matching literal words only. A GEMINI_API_KEY lets it match on meaning, which will return results for this brief."}
+              ? "Try a performer's name, or describe the read you want — naming a setting or a language gives the ranking more to match on."
+              : "Ranking fell back to matching literal words only. Try a performer's name, or set a GEMINI_API_KEY to match on meaning."}
           </span>
         </>
       )}

@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
-import { NavLink, Route, Routes } from "react-router-dom";
 import { Sidebar } from "./components/Sidebar";
 import { Topbar } from "./components/Topbar";
 import { Casting } from "./pages/Casting";
-import { Compare } from "./pages/Compare";
 import { fetchMeta } from "./lib/api";
 import type { Meta } from "./lib/types";
 
@@ -59,15 +57,6 @@ export default function App() {
                 matched on how they come across rather than on keywords.
               </p>
             </div>
-
-            <nav className="tabs" aria-label="Casting views">
-              <NavLink to="/" end className={({ isActive }) => `tab${isActive ? " active" : ""}`}>
-                Brief &amp; ranked looks
-              </NavLink>
-              <NavLink to="/compare" className={({ isActive }) => `tab${isActive ? " active" : ""}`}>
-                Compare with search
-              </NavLink>
-            </nav>
           </div>
 
           {error && (
@@ -81,10 +70,7 @@ export default function App() {
           {!meta && !error && <p className="muted" style={{ marginTop: 24 }}>loading…</p>}
 
           {meta && (
-            <Routes>
-              <Route path="/" element={<Casting meta={meta} />} />
-              <Route path="/compare" element={<Compare meta={meta} />} />
-            </Routes>
+            <Casting meta={meta} />
           )}
         </div>
       </div>

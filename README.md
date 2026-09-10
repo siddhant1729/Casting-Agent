@@ -37,11 +37,9 @@ UI, then stays in the foreground. Ctrl-C stops both. Override the ports with
 `API_PORT=... UI_PORT=... ./run.sh`.
 
 - **UI** — <http://localhost:5173>
-  - `/` — brief in, ranked actor-looks out
-  - `/compare` — the same query through the roster's name search and through this agent, side by side
 - **API** — <http://localhost:8000>, docs at `/docs`
 
-The brief box arrives pre-filled with a seeded example. Press **Rank actor-looks**.
+The box arrives pre-filled with a seeded example. Press **Find matches**.
 
 ### Setting up by hand
 
@@ -177,9 +175,6 @@ step and drop the static site:
 
     buildCommand: pip install -r requirements.txt && pip install -e . && cd frontend && npm ci && npm run build
 
-Client-side routes are handled — `/compare` returns `index.html` rather than a
-404, on both layouts.
-
 ---
 
 ## The vocabulary gap
@@ -227,7 +222,6 @@ the crossing is authored even though the crossing itself is not.
 | **Graceful degradation** | A missing key, a failed call, a rate limit, a malformed score, an unknown id, or an unquotable evidence phrase each degrade to something honest instead of erroring or inventing. Transient 429/503 responses are retried with backoff first. |
 | **One scale per list** | If the model does not score *every* candidate, the whole search falls back to word overlap rather than mixing scorers. A 0.95 judgement ranked against a 0.20 word count is a list sorted by two incompatible numbers — observed live, where partial model output let word-overlap noise out-rank genuine matches. |
 | **Diagnosable failure** | `/api/health` reports *why* the last call failed — `HTTP 429`, `HTTP 404` — never the key or the response. A silent degrade is right for the user and useless for whoever has to work out why the ranking got worse. |
-| **Comparison is computed, not staged** | `/compare` runs both searches against the same catalog and seed. The left panel's empty result is real: `POST /api/actors` matches on name only, and nobody is *named* "warm, credible, explains money without sounding like a bank". Staging that would make the comparison a claim rather than a demonstration. |
 | **Hermetic tests** | The suite never reaches the live API, even with a real key in `.env`. Guarded at session scope, because a module-scoped fixture is set up before function-scoped ones and slipped through the first version of the guard. |
 
 ### Stubbed or weak
@@ -292,9 +286,8 @@ design/                       the Stitch export the UI was built against
   casting-screen.html         source of the palette and type scale
 
 frontend/src/
-  App.tsx                     shell, hero, route tabs
-  pages/Casting.tsx           brief + ranked actor-looks
-  pages/Compare.tsx           name search vs semantic search, one query
+  App.tsx                     shell and hero
+  pages/Casting.tsx           the search box and its results
   components/                 Sidebar, Topbar, LookCard, Portrait, Notices
   lib/                        api client + types mirroring serialize.py
 ```

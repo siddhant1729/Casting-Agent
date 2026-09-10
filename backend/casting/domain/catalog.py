@@ -194,10 +194,10 @@ def roster_looks(roster: list[Actor]) -> list[tuple[Actor, Look]]:
 def search_by_name(roster: list[Actor], term: str) -> list[Actor]:
     """Substring match on the actor's name. Nothing else.
 
-    This is the roster's existing search reproduced honestly, so the comparison
-    view has something real on its left-hand side. It is deliberately not
-    improved: matching on the profile text as well would make it a weak version
-    of the semantic search rather than the thing being compared against.
+    This is the roster's existing search, reproduced honestly. It is
+    deliberately not improved: matching on the profile text as well would make
+    it a weak second ranker sitting behind the real one, and a name lookup that
+    quietly starts answering descriptions is the harder thing to reason about.
 
     A blank term returns the whole roster, which is what a grid with an empty
     search box shows.

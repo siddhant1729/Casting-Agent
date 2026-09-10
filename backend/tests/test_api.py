@@ -93,27 +93,29 @@ def test_health_reports_whether_a_model_is_configured():
 
 # ------------------------------------------------- the comparison view
 
-SEEDED_COMPARISON_QUERY = "warm, credible, explains money without sounding like a bank"
+DESCRIPTION_QUERY = "warm, credible, explains money without sounding like a bank"
 
 
 def test_name_search_returns_nothing_for_a_description():
-    """The left half of the comparison, and it has to be genuine.
+    """The name lookup stays a name lookup.
 
-    No performer is named "warm, credible, explains money...", so the roster's
-    own search returns nothing. Staging that empty state instead of computing
-    it would make the comparison a claim rather than a demonstration.
+    No performer is named "warm, credible, explains money...", so it returns
+    nothing rather than quietly widening to the profile text. This is what makes
+    the router's choice meaningful: the two searches answer different questions.
     """
-    body = client.post("/api/actors", json={"query": SEEDED_COMPARISON_QUERY}).json()
+    body = client.post("/api/actors", json={"query": DESCRIPTION_QUERY}).json()
     assert body["actors"] == []
     assert body["matched"] == 0
     assert body["roster_size"] == 45
     assert body["search_field"] == "name"
 
 
-def test_the_same_query_returns_ranked_looks_from_the_other_endpoint():
-    """The right half. Same words, same catalog, same seed."""
-    body = client.post("/api/search", json={"query": SEEDED_COMPARISON_QUERY}).json()
+def test_a_description_is_routed_to_the_ranking():
+    """Same words, same catalog, same seed — answered by the other path."""
+    body = client.post("/api/search", json={"query": DESCRIPTION_QUERY}).json()
     assert body["items"]
+    assert body["route"] == "description"
+    assert body["actors"] == []
 
 
 def test_name_search_finds_a_real_name():
@@ -187,3 +189,64 @@ def test_cors_does_not_allow_arbitrary_remote_origins():
                  "Access-Control-Request-Method": "POST"},
     )
     assert response.headers.get("access-control-allow-origin") != "https://evil.example.com"
+
+
+# --- Routing -----------------------------------------------------------------
+#
+# One box takes both kinds of query. Which search runs is decided on the server,
+# and these pin the four answers it can give.
+
+
+def test_a_name_is_routed_to_the_roster_lookup():
+    body = client.post("/api/search", json={"query": "Rohan"}).json()
+    assert body["route"] == "name"
+    assert [a["name"] for a in body["actors"]] == ["Rohan K."]
+    assert body["items"] == []
+
+
+def test_a_full_name_routes_on_what_was_typed():
+    """"Arjun B." is a name a user types, not two tokens to be split apart."""
+    body = client.post("/api/search", json={"query": "Arjun B."}).json()
+    assert body["route"] == "name"
+    assert body["matched_names"] >= 1
+    assert all("arjun" in a["name"].lower() for a in body["actors"])
+
+
+def test_a_name_plus_a_description_runs_both():
+    body = client.post(
+        "/api/search",
+        json={"query": "Rohan at a whiteboard, patient and authoritative"},
+    ).json()
+    assert body["route"] == "both"
+    assert body["actors"] and body["items"]
+
+
+def test_a_word_inside_a_name_is_not_a_name():
+    """`search_by_name` is a substring match, so "man" reaches Manav.
+
+    Routing on that would send "a man who explains things" to the name lookup on
+    the strength of an article. Routing is on whole words in a name, so it does
+    not.
+    """
+    body = client.post(
+        "/api/search",
+        json={"query": "a man who explains things without talking down"},
+    ).json()
+    assert body["route"] == "description"
+    assert body["actors"] == []
+
+
+def test_a_blank_query_routes_nowhere_rather_than_returning_the_whole_roster():
+    """The name lookup returns the whole grid for a blank term — that is right
+    for a grid with an empty search box, and wrong for this one box."""
+    body = client.post("/api/search", json={"query": "  "}).json()
+    assert body["route"] == "empty"
+    assert body["actors"] == []
+    assert body["items"] == []
+
+
+def test_a_name_lookup_names_no_scorer():
+    """Nothing was ranked, so claiming a scorer would be inventing one."""
+    body = client.post("/api/search", json={"query": "Rohan"}).json()
+    assert body["scorer"] == "none"
+    assert body["model_used"] is False

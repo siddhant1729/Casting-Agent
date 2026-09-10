@@ -54,10 +54,16 @@ export interface ResultItem {
 export interface Results {
   query: { text: string; kind: Kind | null; limit: number };
   items: ResultItem[];
+  /** Performers matched by name. Populated on the "name" and "both" routes. */
+  actors: Actor[];
+  matched_names: number;
+  /** Which search the server ran. The browser reports it; it does not decide it. */
+  route: "name" | "description" | "both" | "empty";
   seed: number;
   roster_size: number;
   look_count: number;
-  scorer: "model" | "lexical";
+  /** "none" on a pure name lookup — no scorer ran, so none is named. */
+  scorer: "model" | "lexical" | "none";
   model_used: boolean;
   returned: number;
 }
@@ -70,15 +76,4 @@ export interface Meta {
   scorer_notice: string;
   kinds: Kind[];
   settings: string[];
-}
-
-/** Response from POST /api/actors — the roster's own name search. */
-export interface ActorSearchResults {
-  query: { text: string; kind: Kind | null };
-  actors: Actor[];
-  matched: number;
-  roster_size: number;
-  seed: number;
-  /** Always "name". Named by the API so the UI never infers why a panel is empty. */
-  search_field: string;
 }

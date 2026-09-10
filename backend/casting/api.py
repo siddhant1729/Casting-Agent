@@ -19,7 +19,14 @@ from pydantic import BaseModel, Field
 from . import env
 from .domain.catalog import build_roster, search_by_name
 from .domain.models import Kind, Query, Setting
-from .pipeline import DEFAULT_LIMIT, DEFAULT_SEED, EXAMPLE_QUERIES, run
+from .pipeline import (
+    DEFAULT_LIMIT,
+    DEFAULT_SEED,
+    EXAMPLE_QUERIES,
+    empty_results,
+    route,
+    run,
+)
 from .reasoning.llm import get_client
 from .serialize import actor_json, results_json
 
@@ -97,8 +104,48 @@ def _kind(value: str | None) -> Kind | None:
 
 @app.post("/api/search")
 def search_endpoint(request: SearchRequest) -> dict[str, Any]:
+    """One box, both searches, routed here.
+
+    A name off the roster and a description of a person arrive through the same
+    input, and the server decides which search answers. The browser renders what
+    comes back and the label that says where it came from; it does not choose a
+    path, and it does not re-score or re-sort anything.
+
+    A query that is both — a name plus some description of what they are doing —
+    runs both, and the response carries both lists.
+    """
     query = Query(text=request.query, kind=_kind(request.kind), limit=request.limit)
-    return results_json(run(query, seed=request.seed, client=get_client()))
+    plan = route(request.query, build_roster(request.seed))
+
+    # The name half is the roster's own search, reached through the endpoint that
+    # already exposes it rather than through a second copy of the matching rule.
+    # `route` guarantees a non-blank term here, so the blank-term case (which
+    # returns the whole grid) cannot be reached by accident.
+    names = [
+        actors_endpoint(request.model_copy(update={"query": term}))
+        for term in plan.name_terms
+    ]
+    seen: set[str] = set()
+    matched_actors = [
+        actor
+        for body in names
+        for actor in body["actors"]
+        if not (actor["id"] in seen or seen.add(actor["id"]))
+    ]
+
+    ranked = (
+        run(query, seed=request.seed, client=get_client())
+        if plan.wants_ranking
+        else empty_results(query, seed=request.seed)
+    )
+    return {
+        **results_json(ranked),
+        # What ran: "name", "description", "both", or "empty". The UI says so in
+        # plain language rather than inferring it from which list is longer.
+        "route": plan.label,
+        "actors": matched_actors[: request.limit],
+        "matched_names": len(matched_actors),
+    }
 
 
 @app.post("/api/actors")
