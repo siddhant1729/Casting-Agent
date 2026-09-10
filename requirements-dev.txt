@@ -1,0 +1,9 @@
+# Test tooling. Includes the runtime deps, since test_api.py exercises the API.
+#
+#     .venv/bin/pip install -r requirements-dev.txt -e .
+#     .venv/bin/python -m pytest -q
+
+-r requirements.txt
+
+pytest>=8.0
+httpx>=0.27          # required by fastapi.testclient

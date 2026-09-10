@@ -1,0 +1,15 @@
+# Runtime dependencies for the API.
+#
+# pyproject.toml is the source of truth for the package; this file exists so the
+# backend can be stood up with plain pip on a machine without uv:
+#
+#     python -m venv .venv && .venv/bin/pip install -r requirements.txt
+#     .venv/bin/pip install -e .        # puts `casting` on the path
+#
+# The pipeline itself has no third-party dependencies. models, catalog, cost,
+# filters, parser, rank and explain run on the standard library alone, and the
+# Gemini client uses urllib rather than a provider SDK. Everything below is the
+# HTTP surface, so `python scripts/demo.py` works with none of it installed.
+
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.32,<1.0

@@ -1,0 +1,40 @@
+# Local secrets — .env.example is the committed reference and must stay tracked.
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+
+# Logs and scratch
+*.log
+logs/
+
+# Editors and OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.sw?
+
+# design/ is intentionally tracked — the Stitch export is the visual reference
+# the frontend was built against, and a checkout without it cannot be reviewed
+# against the design.

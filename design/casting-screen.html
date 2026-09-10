@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>HEXCODED — Casting Agent</title>
+<!-- Tailwind CSS v3 with forms and container queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap" rel="stylesheet"/>
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              500: '#10b981',
+              600: '#00b67a',
+              700: '#047857',
+              800: '#065f46',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-scrollbars">
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #cbd5e1;
+    }
+  </style>
+<style data-purpose="ambient-gradients">
+    .card-mesh-gradient {
+      background: radial-gradient(circle at 8% 10%, rgba(209, 250, 229, 0.7) 0%, rgba(240, 253, 244, 0.45) 36%, #ffffff 75%);
+    }
+    .ghost-shimmer {
+      background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+      background-size: 200% 100%;
+    }
+  </style>
+</head>
+<body class="bg-[#f7f9f8] text-gray-900 font-sans antialiased min-h-screen flex selection:bg-brand-100 selection:text-brand-800">
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-64 shrink-0 bg-white border-r border-gray-200/80 flex flex-col justify-between py-5 px-4 min-h-screen sticky top-0 h-screen overflow-y-auto" data-purpose="primary-sidebar">
+<!-- Top Navigation Section -->
+<div class="space-y-6">
+<!-- Logo -->
+<div class="px-2 pt-1 flex items-center gap-2">
+<span class="font-display font-black text-2xl tracking-tighter text-black flex items-center">
+          HEXCODED
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-brand-600 ml-1 mb-2"></span>
+</span>
+</div>
+<!-- Main Navigation Links -->
+<nav class="space-y-1" data-purpose="sidebar-main-nav">
+<!-- Home Link -->
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition" href="#">
+<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="m3 12 2-2m0 0 7-7 7 7M5 10v10a1 1 0 0 0 1 1h3m10-11 2 2m-2-2v10a1 1 0 0 1-1 1h-3m-6 0a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Home
+        </a>
+<!-- Projects Link -->
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition" href="#">
+<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 7v10a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Projects
+        </a>
+<!-- Renders Link -->
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition" href="#">
+<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Renders
+        </a>
+<!-- Library Link -->
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition" href="#">
+<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Library
+        </a>
+<!-- Actors Link -->
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition" href="#">
+<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Actors
+        </a>
+<!-- Casting (ACTIVE STATE) -->
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-semibold text-brand-700 bg-brand-50 border border-brand-100/70 rounded-lg transition shadow-xs" href="#">
+<svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" stroke-width="2.3" viewbox="0 0 24 24">
+<path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Casting
+        </a>
+</nav>
+<!-- Tools Section -->
+<div class="pt-4" data-purpose="sidebar-tools-section">
+<div class="px-3 text-[11px] font-semibold text-gray-400 tracking-wider uppercase mb-2">
+          Tools
+        </div>
+<div class="space-y-1">
+<a class="flex items-start gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 transition group" href="#">
+<svg class="w-4 h-4 text-gray-500 mt-0.5 group-hover:text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div>
+<p class="font-medium text-gray-700 text-xs leading-none mb-1">URL → Ad</p>
+<p class="text-[11px] text-gray-400 leading-tight">Link → ad video</p>
+</div>
+</a>
+<a class="flex items-start gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 transition group" href="#">
+<svg class="w-4 h-4 text-gray-500 mt-0.5 group-hover:text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div>
+<p class="font-medium text-gray-700 text-xs leading-none mb-1">Marketing Studio</p>
+<p class="text-[11px] text-gray-400 leading-tight">Describe it, we make it</p>
+</div>
+</a>
+<a class="flex items-start gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 transition group" href="#">
+<svg class="w-4 h-4 text-gray-500 mt-0.5 group-hover:text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div>
+<p class="font-medium text-gray-700 text-xs leading-none mb-1">Talking Actors</p>
+<p class="text-[11px] text-gray-400 leading-tight">Actor speaks your script</p>
+</div>
+</a>
+<a class="flex items-start gap-3 px-3 py-2 text-sm rounded-lg hover:bg-gray-50 transition group" href="#">
+<svg class="w-4 h-4 text-gray-500 mt-0.5 group-hover:text-gray-700" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div>
+<p class="font-medium text-gray-700 text-xs leading-none mb-1">Creative Studio</p>
+<p class="text-[11px] text-gray-400 leading-tight">Pick a model, generate</p>
+</div>
+</a>
+</div>
+</div>
+</div>
+<!-- Bottom Settings Item -->
+<div class="pt-4 border-t border-gray-100">
+<a class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition" href="#">
+<svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+        Settings
+      </a>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- Main View Container -->
+<div class="flex-1 flex flex-col min-w-0">
+<!-- BEGIN: TopBar -->
+<header class="h-16 px-8 flex items-center justify-end" data-purpose="top-header">
+<!-- User Brand Badge (Explicitly NO Subscribe button, NO theme toggle) -->
+<div class="flex items-center gap-2.5 bg-white border border-gray-200/90 rounded-full px-3.5 py-1.5 shadow-xs">
+<div class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-xs tracking-tight">
+          S
+        </div>
+<div class="text-xs">
+<span class="text-gray-400 uppercase font-semibold text-[10px] tracking-wide block leading-none">Brand</span>
+<span class="text-gray-800 font-medium">Siddhant's Workspace</span>
+</div>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: MainContentArea -->
+<main class="px-8 pb-16 max-w-[1360px] w-full mx-auto" data-purpose="main-content">
+<!-- Primary Card Container -->
+<div class="card-mesh-gradient rounded-3xl border border-gray-200/90 p-8 shadow-xs">
+<!-- Top Subtle Tag -->
+<div class="flex items-center gap-2 mb-3">
+<span class="w-2 h-2 rounded-full bg-brand-600 animate-pulse"></span>
+<span class="text-[11px] font-mono uppercase tracking-wider text-gray-500 font-semibold">
+            Casting Agent · prototype
+          </span>
+</div>
+<!-- Hero Heading and Subtitle -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+<div>
+<h1 class="text-3xl md:text-4xl font-extrabold font-display text-gray-950 tracking-tight leading-tight mb-2">
+              Cast with <span class="text-brand-600 font-black">precision</span> for your campaign.
+            </h1>
+<p class="text-sm text-gray-600 max-w-2xl leading-relaxed">
+              Intelligent semantic matching across distinct actor-looks, tonality profiles, and authentic staging environments—moving beyond blunt keyword searches.
+            </p>
+</div>
+<!-- Crisp Segmented View Switcher -->
+<div class="inline-flex p-1 bg-gray-100/90 rounded-xl border border-gray-200/80 shrink-0 self-start md:self-auto" role="tablist">
+<button class="px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 bg-white text-gray-900 shadow-xs flex items-center gap-2" id="tab-brief-btn" onclick="switchView('brief')">
+<svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 6h16M4 12h16M4 18h7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Brief &amp; Ranked Looks
+            </button>
+<button class="px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 text-gray-600 hover:text-gray-900 flex items-center gap-2" id="tab-comparison-btn" onclick="switchView('comparison')">
+<svg class="w-3.5 h-3.5 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Live Comparison: Keyword vs Semantic
+              <span class="inline-flex items-center text-[10px] font-bold bg-brand-100 text-brand-800 px-1.5 py-0.5 rounded uppercase tracking-wider">Core Demo</span>
+</button>
+</div>
+</div>
+<!-- ========================================================================= -->
+<!-- VIEW 1: BRIEF & THREE MAIN REGIONS (Workflow View) -->
+<!-- ========================================================================= -->
+<div class="space-y-8" id="view-brief-workflow">
+<!-- REGION 1: BRIEF -->
+<section class="bg-white rounded-2xl border border-gray-200/90 p-5 shadow-xs transition focus-within:ring-2 focus-within:ring-brand-500 focus-within:border-brand-500" data-purpose="region-1-brief">
+<div class="flex items-center justify-between mb-2">
+<label class="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1.5" for="client-brief-textarea">
+<svg class="w-4 h-4 text-brand-600" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                Region 1 · Campaign Brief
+              </label>
+<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+<svg class="w-3 h-3 text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                Natural Language Parser Active
+              </span>
+</div>
+<textarea class="w-full text-sm text-gray-800 border-0 p-1 focus:ring-0 resize-none font-normal leading-relaxed" id="client-brief-textarea" placeholder="Paste your creative casting requirements, dialogue tone, or script brief..." rows="3">FinTech app campaign focusing on everyday wealth security and trust. Needs to feel warm, credible, and explain money without sounding like a traditional bank. Looking for relatable performers in casual home workspace or coffee shop settings with natural bilingual conversational ease.</textarea>
+<div class="mt-4 pt-3.5 border-t border-gray-100 flex flex-wrap items-center justify-between gap-3">
+<!-- Three quiet tappable chips -->
+<div class="flex flex-wrap items-center gap-2">
+<span class="text-[11px] text-gray-400 font-medium">Quick brief presets:</span>
+<button class="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg border border-gray-200 transition font-medium text-left" type="button">
+                  ⚡ FinTech app security &amp; wealth (warm, approachable, no corporate jargon)
+                </button>
+<button class="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg border border-gray-200 transition font-medium text-left" type="button">
+                  🌾 Oat milk D2C launch (quirky morning comedy, kitchen setting)
+                </button>
+<button class="text-xs bg-gray-50 hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded-lg border border-gray-200 transition font-medium text-left" type="button">
+                  🛵 Urban mobility electric scooter (energetic, streetwear, metro hustle)
+                </button>
+</div>
+<button class="bg-gray-950 hover:bg-black text-white px-4 py-2 rounded-lg text-xs font-semibold flex items-center gap-2 transition shadow-xs" type="button">
+<svg class="w-3.5 h-3.5 text-brand-500" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+                Extract Attributes &amp; Rank
+              </button>
+</div>
+</section>
+<!-- REGION 2: WHAT WE UNDERSTOOD -->
+<section class="bg-white rounded-2xl border border-gray-200/90 p-5 shadow-xs" data-purpose="region-2-understood">
+<div class="flex items-center justify-between mb-3.5">
+<div class="flex items-center gap-2">
+<h2 class="text-xs font-bold text-gray-800 uppercase tracking-wider">Region 2 · What We Understood</h2>
+<span class="text-gray-400 text-xs">(Editable attribute slots)</span>
+</div>
+<button class="text-xs text-brand-700 font-medium hover:underline">Reset attributes</button>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-center">
+<!-- Horizontal row of chips (Left 8 cols) -->
+<div class="xl:col-span-8 flex flex-wrap gap-2 items-center">
+<!-- tone -->
+<span class="inline-flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-800">
+<span class="text-gray-400 text-[11px]">tone:</span>
+<strong class="font-medium text-gray-900">Warm, credible, conversational</strong>
+<button class="text-gray-400 hover:text-gray-600 ml-1 text-sm leading-none">×</button>
+</span>
+<!-- languages -->
+<span class="inline-flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-800">
+<span class="text-gray-400 text-[11px]">languages:</span>
+<strong class="font-medium text-gray-900">English, Hindi</strong>
+<button class="text-gray-400 hover:text-gray-600 ml-1 text-sm leading-none">×</button>
+</span>
+<!-- setting -->
+<span class="inline-flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-800">
+<span class="text-gray-400 text-[11px]">setting:</span>
+<strong class="font-medium text-gray-900">Domestic / Informal workspace</strong>
+<button class="text-gray-400 hover:text-gray-600 ml-1 text-sm leading-none">×</button>
+</span>
+<!-- audience -->
+<span class="inline-flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-800">
+<span class="text-gray-400 text-[11px]">audience:</span>
+<strong class="font-medium text-gray-900">Urban 24-40 Gen-Z &amp; Millennials</strong>
+<button class="text-gray-400 hover:text-gray-600 ml-1 text-sm leading-none">×</button>
+</span>
+<!-- product category -->
+<span class="inline-flex items-center gap-1.5 bg-emerald-50/60 border border-emerald-200 rounded-lg px-2.5 py-1.5 text-xs text-gray-800">
+<span class="text-emerald-700 text-[11px] font-medium">product category:</span>
+<strong class="font-medium text-emerald-950">FinTech / Consumer Wealth</strong>
+<button class="text-gray-400 hover:text-gray-600 ml-1 text-sm leading-none">×</button>
+</span>
+<!-- Visibly empty slots -->
+<span class="inline-flex items-center gap-1.5 border border-dashed border-gray-300 rounded-lg px-2.5 py-1.5 text-xs text-gray-400 hover:border-gray-400 hover:text-gray-600 transition cursor-pointer bg-white">
+<span class="font-medium text-gray-500">+ Dialect / Regional Accent:</span>
+<em class="not-italic text-gray-400">— Empty</em>
+</span>
+<span class="inline-flex items-center gap-1.5 border border-dashed border-gray-300 rounded-lg px-2.5 py-1.5 text-xs text-gray-400 hover:border-gray-400 hover:text-gray-600 transition cursor-pointer bg-white">
+<span class="font-medium text-gray-500">+ Wardrobe / Silhouette:</span>
+<em class="not-italic text-gray-400">— Empty</em>
+</span>
+</div>
+<!-- Tonal Risk Slider (Right 4 cols) -->
+<div class="xl:col-span-4 bg-gray-50/80 rounded-xl p-3.5 border border-gray-200/70">
+<div class="flex items-center justify-between text-xs mb-1.5">
+<span class="font-bold text-gray-700 uppercase tracking-wider text-[10px]">Tonal Risk Slider</span>
+<span class="font-mono text-xs font-bold text-brand-700 bg-brand-50 border border-brand-200/80 px-2 py-0.5 rounded">
+                    42% · Conversational Reassurance
+                  </span>
+</div>
+<input class="w-full accent-brand-600 h-1.5 bg-gray-200 rounded-lg cursor-pointer" max="100" min="0" type="range" value="42"/>
+<div class="flex justify-between text-[10px] text-gray-400 mt-1 font-medium">
+<span>Safe &amp; Institutional</span>
+<span>Bold &amp; Provocative</span>
+</div>
+</div>
+</div>
+</section>
+<!-- REGION 3: MATCHES (Ranked Actor-Looks) -->
+<section class="space-y-4" data-purpose="region-3-matches">
+<div class="flex items-center justify-between px-1">
+<div>
+<h3 class="text-sm font-bold text-gray-900 uppercase tracking-wide flex items-center gap-2">
+<span>Region 3 · Ranked Actor-Looks</span>
+<span class="text-xs font-normal normal-case text-gray-500">(Ranked unit is an actor-look, not actor. No pricing or booking locks.)</span>
+</h3>
+</div>
+<span class="text-xs text-gray-400 font-mono">Semantic affinity score</span>
+</div>
+<!-- Card 1: Rohan Sen (Look: FinTech Anchor / Everyday Trust) -->
+<article class="bg-white rounded-2xl border border-gray-200 p-5 shadow-xs hover:border-gray-300 transition">
+<div class="flex items-start gap-4">
+<!-- Look Portrait Thumbnail -->
+<div class="w-20 h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-200/80 shadow-2xs">
+<img alt="Rohan Sen - FinTech Anchor Look" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9w_Sl3ELCODU2CIP3A-mZ-xH6LSewTCzn3y6L3JC-oDJsE3gDA7Z_TJMwJBVOm5dsgXb3WP6dgIG9fOTYja37QRIlOisyhTJbg8d5LGo6LyPw88zfRQKan_QCIpXLU7dgY_xuffFBWoMUuj1olEg8p_HWt6SdQ-bABCbw7vzQlQoj1om7147kmsZxZIWxr8aBqDvNRwYNMXgydvkX-5Wd5Gqyw8nC9kN9pZz4av_q-GK_B146FBKM6Q"/>
+</div>
+<!-- Card Content -->
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+<div class="flex items-center gap-2.5">
+<span class="w-5 h-5 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-[11px]">1</span>
+<h4 class="text-base font-bold text-gray-950">Rohan Sen</h4>
+<span class="text-xs font-semibold bg-brand-50 text-brand-800 border border-brand-200/80 px-2.5 py-0.5 rounded-md">
+                        Look: FinTech Anchor / Everyday Trust
+                      </span>
+</div>
+<!-- Match Score Badge -->
+<span class="inline-flex items-center gap-1 text-xs font-bold text-brand-800 bg-brand-50 border border-brand-200 px-2.5 py-1 rounded-full font-mono">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+                      98% Match
+                    </span>
+</div>
+<!-- Two-sentence plain language rationale -->
+<p class="text-xs text-gray-600 leading-relaxed my-2">
+                    Projects grounded, relatable financial reassurance without rehearsed banking stiffness. Delivers complex fiscal advice with friendly domestic warmth and conversational cadence.
+                  </p>
+<!-- Small tags for languages and setting -->
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<span class="inline-flex items-center gap-1 text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded border border-gray-200/70 font-medium">
+<span class="text-gray-400">Languages:</span> Hindi, English
+                    </span>
+<span class="inline-flex items-center gap-1 text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded border border-gray-200/70 font-medium">
+<span class="text-gray-400">Setting:</span> Modern Apartment, Studio Desk
+                    </span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 2: Priya Nair (Look: Independent Wealth / Approachable Clarity) -->
+<article class="bg-white rounded-2xl border border-gray-200 p-5 shadow-xs hover:border-gray-300 transition">
+<div class="flex items-start gap-4">
+<!-- Look Portrait Thumbnail -->
+<div class="w-20 h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-200/80 shadow-2xs">
+<img alt="Priya Nair - Independent Wealth Look" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPv1PeX7lo6rplLEB-cD8F6IOQDw0KpVHEr519K8aENSNIUkS_TibyJO7xOEnhBhk4yE5Mx4ODhQadzgPkERJyLeVe3Ou_-Bqspx8Q5JA6J-PT99eTN_ZOG0Sa4sJ5v5Ixp3sOaUZIUZD9QoYgiBck_tc3NvLdMzJznkTYWU4Nu7Pn9nZ-VGHbejp-0pFhKPs9yjd6JJa3k9qwDZ8BIgLQgbX6SYu8EAVkl-JtpHb2huI26MzlkWctwg"/>
+</div>
+<!-- Card Content -->
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+<div class="flex items-center gap-2.5">
+<span class="w-5 h-5 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-[11px]">2</span>
+<h4 class="text-base font-bold text-gray-950">Priya Nair</h4>
+<span class="text-xs font-semibold bg-purple-50 text-purple-800 border border-purple-200/80 px-2.5 py-0.5 rounded-md">
+                        Look: Independent Wealth / Approachable Clarity
+                      </span>
+</div>
+<!-- Match Score Badge -->
+<span class="inline-flex items-center gap-1 text-xs font-bold text-brand-800 bg-brand-50 border border-brand-200 px-2.5 py-1 rounded-full font-mono">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+                      95% Match
+                    </span>
+</div>
+<!-- Two-sentence plain language rationale -->
+<p class="text-xs text-gray-600 leading-relaxed my-2">
+                    Effortlessly disarms financial anxiety through patient, warm vocal modulation. Tests exceptionally high on unscripted, advisory-level empathy.
+                  </p>
+<!-- Small tags for languages and setting -->
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<span class="inline-flex items-center gap-1 text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded border border-gray-200/70 font-medium">
+<span class="text-gray-400">Languages:</span> English, Tamil
+                    </span>
+<span class="inline-flex items-center gap-1 text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded border border-gray-200/70 font-medium">
+<span class="text-gray-400">Setting:</span> Home Study, Contemporary Living
+                    </span>
+</div>
+</div>
+</div>
+</article>
+<!-- Card 3: Rohan Sen AGAIN (Look: Casual Founder / Coffee Shop Explainer) -->
+<article class="bg-white rounded-2xl border border-gray-200 p-5 shadow-xs hover:border-gray-300 transition">
+<div class="flex items-start gap-4">
+<!-- Look Portrait Thumbnail -->
+<div class="w-20 h-20 rounded-xl overflow-hidden bg-gray-100 shrink-0 border border-gray-200/80 shadow-2xs">
+<img alt="Rohan Sen - Casual Founder Look" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl2TjCAtOClhPBgDGtI_H-hnaP4LA_Zt2G03P8F8OMawCAHgZOIhN8qovs5SB18ytpQp_3A54ARAN6_qm_mHNcbxcPNL2bEcy3a-6-hwLWCTdeE3sCZGHaWgjjCF8RTWcGxSGXzUD3TrwfMD30qr641WZKovOcy1Letqz7risXEp5e8xjJfIQnMNVEbFrBYl-Ri26MfH3Lw9V4SGiV--SRv4uhupX4_cf3KxpP5g12PIBIdRusCg-tGA"/>
+</div>
+<!-- Card Content -->
+<div class="flex-1 min-w-0">
+<div class="flex flex-wrap items-center justify-between gap-2 mb-1">
+<div class="flex items-center gap-2.5">
+<span class="w-5 h-5 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-[11px]">3</span>
+<h4 class="text-base font-bold text-gray-950">Rohan Sen</h4>
+<span class="text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200/80 px-2.5 py-0.5 rounded-md">
+                        Look: Casual Founder / Coffee Shop Explainer
+                      </span>
+</div>
+<!-- Match Score Badge -->
+<span class="inline-flex items-center gap-1 text-xs font-bold text-brand-800 bg-brand-50 border border-brand-200 px-2.5 py-1 rounded-full font-mono">
+<span class="w-1.5 h-1.5 rounded-full bg-brand-600"></span>
+                      92% Match
+                    </span>
+</div>
+<!-- Two-sentence plain language rationale -->
+<p class="text-xs text-gray-600 leading-relaxed my-2">
+                    Translates modern fintech perks into peer-to-peer recommendation energy. Avoids institutional banking clichés with relaxed, self-effacing humor.
+                  </p>
+<!-- Small tags for languages and setting -->
+<div class="flex flex-wrap items-center gap-2 pt-1">
+<span class="inline-flex items-center gap-1 text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded border border-gray-200/70 font-medium">
+<span class="text-gray-400">Languages:</span> English, Hindi
+                    </span>
+<span class="inline-flex items-center gap-1 text-[11px] bg-gray-100 text-gray-700 px-2 py-0.5 rounded border border-gray-200/70 font-medium">
+<span class="text-gray-400">Setting:</span> Third-Wave Cafe, Co-working
+                    </span>
+</div>
+</div>
+</div>
+</article>
+<!-- Collapsed row below matches: "12 looks not shown" with expandable toggle -->
+<div class="border border-gray-200 rounded-2xl bg-white overflow-hidden" data-purpose="filtered-looks-accordion">
+<details class="group">
+<summary class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 transition list-none">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-gray-400"></span>
+<span class="text-xs font-bold uppercase tracking-wider text-gray-700">12 looks not shown</span>
+<span class="text-xs text-gray-400 font-normal">(Filtered solely by missing language or missing setting constraints)</span>
+</div>
+<div class="flex items-center gap-2 text-xs text-gray-500 group-open:rotate-180 transition-transform">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</summary>
+<div class="p-4 pt-1 border-t border-gray-100 space-y-2.5 bg-gray-50/40">
+<div class="p-3 bg-white rounded-xl border border-gray-200/80 text-xs flex items-center justify-between">
+<div>
+<strong class="text-gray-900 font-semibold">Aarav Mehta</strong>
+<span class="text-gray-500 ml-1.5">— Look: Corporate Boardroom / Tech Lead</span>
+</div>
+<span class="text-amber-800 bg-amber-50 border border-amber-200/80 text-[11px] px-2 py-0.5 rounded font-medium">
+                      Filtered: Missing domestic setting (requires Studio/Office)
+                    </span>
+</div>
+<div class="p-3 bg-white rounded-xl border border-gray-200/80 text-xs flex items-center justify-between">
+<div>
+<strong class="text-gray-900 font-semibold">Neha Sharma</strong>
+<span class="text-gray-500 ml-1.5">— Look: Upbeat Lifestyle / Kitchen Morning</span>
+</div>
+<span class="text-amber-800 bg-amber-50 border border-amber-200/80 text-[11px] px-2 py-0.5 rounded font-medium">
+                      Filtered: Missing Hindi language coverage
+                    </span>
+</div>
+<div class="p-3 bg-white rounded-xl border border-gray-200/80 text-xs flex items-center justify-between">
+<div>
+<strong class="text-gray-900 font-semibold">Vikram Malhotra</strong>
+<span class="text-gray-500 ml-1.5">— Look: Indie Commuter / Transit</span>
+</div>
+<span class="text-amber-800 bg-amber-50 border border-amber-200/80 text-[11px] px-2 py-0.5 rounded font-medium">
+                      Filtered: Missing conversational setting
+                    </span>
+</div>
+</div>
+</details>
+</div>
+<!-- Counterfactual Diagnostic Card / When No Look Matches Preview -->
+<div class="p-5 rounded-2xl bg-white border border-emerald-200/80 shadow-xs" data-purpose="counterfactual-preview">
+<div class="flex items-start gap-3.5">
+<div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center font-bold text-sm shrink-0">
+<svg class="w-4 h-4 text-emerald-700" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="space-y-1.5 flex-1">
+<div class="flex items-center justify-between">
+<h4 class="text-xs font-bold uppercase tracking-wider text-emerald-950">Diagnostic &amp; Empty-State Recovery Engine</h4>
+<span class="text-[10px] font-mono bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded">Always Actionable</span>
+</div>
+<p class="text-xs text-gray-600 leading-relaxed">
+                    If tighter constraints yield zero matches: <span class="font-semibold text-gray-800">"0 looks match current constraints"</span>.
+                    The agent identifies the exact barrier: <span class="text-gray-900 bg-gray-100 px-1.5 py-0.5 rounded font-mono text-[11px]">Setting: 'Third-Wave Cafe' excluded 8 candidate looks</span>.
+                  </p>
+<p class="text-xs text-brand-700 font-medium">
+                    Counterfactual Recovery: "Removing 'Third-Wave Cafe' filter returns 7 high-affinity looks. Adding English (US) returns 4 looks."
+                  </p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- ========================================================================= -->
+<!-- VIEW 2: THE COMPARISON VIEW (The Most Important Screen / Showcase) -->
+<!-- ========================================================================= -->
+<div class="hidden space-y-6" id="view-comparison-showcase">
+<!-- Shared Query Search Input Header Bar -->
+<div class="bg-white rounded-2xl border-2 border-brand-500/30 p-4 shadow-sm" data-purpose="shared-search-container">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold font-mono tracking-wider uppercase bg-brand-100 text-brand-800">
+                  Shared Natural Language Query
+                </span>
+<span class="text-xs text-gray-400">Passed simultaneously into both retrieval architectures:</span>
+</div>
+<span class="text-[11px] text-gray-500 font-mono">1 query · 2 entirely different outcomes</span>
+</div>
+<div class="relative flex items-center">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+<svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<input class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-semibold text-gray-900 focus:ring-2 focus:ring-brand-500 focus:border-brand-500 font-mono tracking-tight" readonly="" type="text" value="warm, credible, explains money without sounding like a bank"/>
+</div>
+</div>
+<!-- Two Panels Side-by-Side Under Shared Search -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+<!-- =================================================================== -->
+<!-- LEFT PANEL: Traditional Keyword / Name Search (Reads as starkly empty) -->
+<!-- =================================================================== -->
+<div class="bg-gray-50/70 rounded-2xl border border-gray-200 p-6 flex flex-col justify-between min-h-[580px]" data-purpose="left-panel-keyword">
+<div>
+<!-- Panel Label -->
+<div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-200">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-gray-400"></span>
+<h3 class="text-xs font-bold uppercase tracking-wider text-gray-700">
+                      Search actors · Keyword / Name Match
+                    </h3>
+</div>
+<span class="text-[10px] font-mono text-gray-400 uppercase bg-gray-200/70 px-2 py-0.5 rounded">Legacy Catalog</span>
+</div>
+<!-- Empty State Message -->
+<div class="bg-white rounded-xl border border-dashed border-gray-300 p-6 text-center mb-6">
+<div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-3 text-gray-400">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<h4 class="text-sm font-bold text-gray-900 mb-1">
+                    0 actors match "<span class="font-normal text-gray-600">warm, credible, explains money without sounding like a bank</span>"
+                  </h4>
+<p class="text-xs text-gray-500 max-w-sm mx-auto leading-relaxed mt-2">
+                    Traditional search queries look for literal actor names or biographical text keywords. It cannot parse tone, affective delivery, or financial credibility.
+                  </p>
+</div>
+<!-- Muted Ghost / Empty Wireframe Portraits Grid -->
+<div class="space-y-2">
+<span class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider block mb-2">Unmatched Roster (0% semantic recall)</span>
+<div class="grid grid-cols-3 gap-3 opacity-40 grayscale">
+<div class="border border-gray-200 rounded-xl p-3 bg-white space-y-2">
+<div class="w-full aspect-square rounded-lg bg-gray-200"></div>
+<div class="h-2.5 w-3/4 bg-gray-200 rounded"></div>
+<div class="h-2 w-1/2 bg-gray-100 rounded"></div>
+</div>
+<div class="border border-gray-200 rounded-xl p-3 bg-white space-y-2">
+<div class="w-full aspect-square rounded-lg bg-gray-200"></div>
+<div class="h-2.5 w-2/3 bg-gray-200 rounded"></div>
+<div class="h-2 w-1/2 bg-gray-100 rounded"></div>
+</div>
+<div class="border border-gray-200 rounded-xl p-3 bg-white space-y-2">
+<div class="w-full aspect-square rounded-lg bg-gray-200"></div>
+<div class="h-2.5 w-4/5 bg-gray-200 rounded"></div>
+<div class="h-2 w-1/3 bg-gray-100 rounded"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom diagnostic -->
+<div class="mt-6 pt-3 border-t border-gray-200 text-[11px] text-gray-400 font-mono">
+                Status: Query aborted · No literal name tokens found
+              </div>
+</div>
+<!-- =================================================================== -->
+<!-- RIGHT PANEL: Casting (Semantic Actor-Look Engine - Dense & Ranked) -->
+<!-- =================================================================== -->
+<div class="bg-white rounded-2xl border-2 border-brand-500/40 p-6 shadow-sm flex flex-col justify-between min-h-[580px]" data-purpose="right-panel-semantic">
+<div>
+<!-- Panel Label -->
+<div class="flex items-center justify-between pb-3 mb-4 border-b border-gray-100">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-brand-600 animate-pulse"></span>
+<h3 class="text-xs font-bold uppercase tracking-wider text-brand-900">
+                      Casting · Semantic Actor-Look Engine
+                    </h3>
+</div>
+<span class="text-[10px] font-mono font-semibold text-brand-700 bg-brand-50 border border-brand-200 px-2 py-0.5 rounded">
+                    3 High-Affinity Looks Found
+                  </span>
+</div>
+<!-- Dense Ranked List of Actor Looks -->
+<div class="space-y-3.5">
+<!-- Rank 1: Rohan Sen (Look: FinTech Anchor / Everyday Trust) -->
+<div class="border border-gray-200 hover:border-brand-400 rounded-xl p-3.5 bg-brand-50/20 transition">
+<div class="flex items-start gap-3.5">
+<div class="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
+<img alt="Rohan Sen" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA9w_Sl3ELCODU2CIP3A-mZ-xH6LSewTCzn3y6L3JC-oDJsE3gDA7Z_TJMwJBVOm5dsgXb3WP6dgIG9fOTYja37QRIlOisyhTJbg8d5LGo6LyPw88zfRQKan_QCIpXLU7dgY_xuffFBWoMUuj1olEg8p_HWt6SdQ-bABCbw7vzQlQoj1om7147kmsZxZIWxr8aBqDvNRwYNMXgydvkX-5Wd5Gqyw8nC9kN9pZz4av_q-GK_B146FBKM6Q"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-2">
+<h4 class="text-sm font-bold text-gray-900">Rohan Sen</h4>
+<span class="text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 px-1.5 py-0.5 rounded">
+                              Look: FinTech Anchor / Everyday Trust
+                            </span>
+</div>
+<span class="text-xs font-bold font-mono text-brand-700">98% Match</span>
+</div>
+<p class="text-[11px] text-gray-600 leading-snug mb-2">
+                          Projects grounded, relatable financial reassurance without rehearsed banking stiffness. Delivers complex fiscal advice with friendly domestic warmth and conversational cadence.
+                        </p>
+<div class="flex items-center gap-2 text-[10px] text-gray-500 font-medium">
+<span>Tags: Hindi, English</span>
+<span>•</span>
+<span>Setting: Modern Apartment, Studio Desk</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Rank 2: Priya Nair (Look: Independent Wealth / Approachable Clarity) -->
+<div class="border border-gray-200 hover:border-brand-400 rounded-xl p-3.5 bg-white transition">
+<div class="flex items-start gap-3.5">
+<div class="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
+<img alt="Priya Nair" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPv1PeX7lo6rplLEB-cD8F6IOQDw0KpVHEr519K8aENSNIUkS_TibyJO7xOEnhBhk4yE5Mx4ODhQadzgPkERJyLeVe3Ou_-Bqspx8Q5JA6J-PT99eTN_ZOG0Sa4sJ5v5Ixp3sOaUZIUZD9QoYgiBck_tc3NvLdMzJznkTYWU4Nu7Pn9nZ-VGHbejp-0pFhKPs9yjd6JJa3k9qwDZ8BIgLQgbX6SYu8EAVkl-JtpHb2huI26MzlkWctwg"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-2">
+<h4 class="text-sm font-bold text-gray-900">Priya Nair</h4>
+<span class="text-[10px] font-semibold bg-purple-50 text-purple-800 border border-purple-200 px-1.5 py-0.5 rounded">
+                              Look: Independent Wealth / Approachable Clarity
+                            </span>
+</div>
+<span class="text-xs font-bold font-mono text-brand-700">95% Match</span>
+</div>
+<p class="text-[11px] text-gray-600 leading-snug mb-2">
+                          Effortlessly disarms financial anxiety through patient, warm vocal modulation. Tests exceptionally high on unscripted, advisory-level empathy.
+                        </p>
+<div class="flex items-center gap-2 text-[10px] text-gray-500 font-medium">
+<span>Tags: English, Tamil</span>
+<span>•</span>
+<span>Setting: Home Study, Contemporary Living</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Rank 3: Rohan Sen AGAIN (Look: Casual Founder / Coffee Shop Explainer) -->
+<div class="border border-gray-200 hover:border-brand-400 rounded-xl p-3.5 bg-white transition">
+<div class="flex items-start gap-3.5">
+<div class="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 shrink-0 border border-gray-200">
+<img alt="Rohan Sen - Casual Founder" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCl2TjCAtOClhPBgDGtI_H-hnaP4LA_Zt2G03P8F8OMawCAHgZOIhN8qovs5SB18ytpQp_3A54ARAN6_qm_mHNcbxcPNL2bEcy3a-6-hwLWCTdeE3sCZGHaWgjjCF8RTWcGxSGXzUD3TrwfMD30qr641WZKovOcy1Letqz7risXEp5e8xjJfIQnMNVEbFrBYl-Ri26MfH3Lw9V4SGiV--SRv4uhupX4_cf3KxpP5g12PIBIdRusCg-tGA"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1 mb-1">
+<div class="flex items-center gap-2">
+<h4 class="text-sm font-bold text-gray-900">Rohan Sen</h4>
+<span class="text-[10px] font-semibold bg-blue-50 text-blue-800 border border-blue-200 px-1.5 py-0.5 rounded">
+                              Look: Casual Founder / Coffee Shop Explainer
+                            </span>
+</div>
+<span class="text-xs font-bold font-mono text-brand-700">92% Match</span>
+</div>
+<p class="text-[11px] text-gray-600 leading-snug mb-2">
+                          Translates modern fintech perks into peer-to-peer recommendation energy. Avoids institutional banking clichés with relaxed, self-effacing humor.
+                        </p>
+<div class="flex items-center gap-2 text-[10px] text-gray-500 font-medium">
+<span>Tags: English, Hindi</span>
+<span>•</span>
+<span>Setting: Third-Wave Cafe, Co-working</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom note emphasizing multi-look ranking -->
+<div class="mt-6 pt-3 border-t border-gray-100 flex items-center justify-between text-[11px] text-brand-800 font-medium">
+<span>Rohan Sen matched under 2 distinct looks</span>
+<span class="font-mono text-gray-400">Zero budget/booking friction</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- END: MainContentArea -->
+</div>
+<!-- Tab Toggle Script for View Switching -->
+<script>
+    function switchView(mode) {
+      const briefView = document.getElementById('view-brief-workflow');
+      const comparisonView = document.getElementById('view-comparison-showcase');
+      const briefBtn = document.getElementById('tab-brief-btn');
+      const comparisonBtn = document.getElementById('tab-comparison-btn');
+
+      if (mode === 'comparison') {
+        briefView.classList.add('hidden');
+        comparisonView.classList.remove('hidden');
+
+        // Styles for active comparison tab
+        comparisonBtn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 bg-white text-gray-900 shadow-xs flex items-center gap-2";
+        briefBtn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 text-gray-600 hover:text-gray-900 flex items-center gap-2";
+      } else {
+        comparisonView.classList.add('hidden');
+        briefView.classList.remove('hidden');
+
+        // Styles for active brief tab
+        briefBtn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 bg-white text-gray-900 shadow-xs flex items-center gap-2";
+        comparisonBtn.className = "px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-150 text-gray-600 hover:text-gray-900 flex items-center gap-2";
+      }
+    }
+  </script>
+</body></html>
